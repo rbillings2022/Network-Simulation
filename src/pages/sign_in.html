@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — Tracer</title>
+    <link href="../styles/style.css" rel="stylesheet" />
+    <link href="../styles/sign_in.css" rel="stylesheet" />
+    <link rel="icon" href="../../assets/icons/lightning.png" type="image/x-icon" />
+  </head>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+  </style>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <img src="../../assets/icons/lightning.png" alt="Logo" class="login-logo" />
+          <h1 style="margin-bottom: 10px;">Tracer</h1>
+          <p>Enter your credentials to access the Dashboard</p>
+        </div>
+
+        <!-- Error / success banner -->
+        <div id="auth-message" class="auth-message hidden"></div>
+
+        <div class="login-form">
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" required />
+          </div>
+
+          <button id="login-btn" class="login-btn" onclick="handleLogin()">
+            <span id="btn-text">Sign In</span>
+            <span id="btn-spinner" class="spinner hidden"></span>
+          </button>
+
+          <div class="login-footer">
+            <a href="register.html">Don't have an account? Register →</a>
+          </div>
+          <div class="login-footer" style="margin-top:10px;">
+            <a href="../../index.html">← Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:3000/api";
+
+      function showMessage(text, type = "error") {
+        const el = document.getElementById("auth-message");
+        el.textContent = text;
+        el.className = `auth-message ${type}`;
+      }
+
+      function setLoading(loading) {
+        document.getElementById("btn-text").classList.toggle("hidden", loading);
+        document.getElementById("btn-spinner").classList.toggle("hidden", !loading);
+        document.getElementById("login-btn").disabled = loading;
+      }
+
+      async function handleLogin() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          showMessage("Please fill in all fields.");
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const res = await fetch(`${API_BASE}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            showMessage(data.error || "Login failed.");
+            return;
+          }
+
+          // Store user info (use JWT in production)
+          sessionStorage.setItem("tracer_user", JSON.stringify(data.user));
+          showMessage("Welcome back, " + data.user.name + "!", "success");
+
+          setTimeout(() => {
+            window.location.href = "../../index.html";
+          }, 800);
+        } catch (err) {
+          showMessage("Could not reach server. Is it running?");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Allow Enter key to submit
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") handleLogin();
+      });
+    </script>
+  </body>
+</html>

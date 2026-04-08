@@ -1,0 +1,10 @@
+Utilising npm install:
+    -   when you need to install anything
+        in package.json you run "npm install" on folder
+        that holds the package file.
+    -   It will then create a node_module folder
+        with all the dependencies.
+    -   You can keep your package.json files seperate 
+        depending on folder functionality. 
+        This project uses package.json in 'server'
+        and 'root' folder.

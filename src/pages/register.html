@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — Tracer</title>
+    <link href="../styles/style.css" rel="stylesheet" />
+    <link href="../styles/sign_in.css" rel="stylesheet" />
+    <link rel="icon" href="../../assets/icons/lightning.png" type="image/x-icon" />
+  </head>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+  </style>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <img src="../../assets/icons/lightning.png" alt="Logo" class="login-logo" />
+          <h1 style="margin-bottom: 10px;">Create Account</h1>
+          <p>Join Tracer to access the Dashboard</p>
+        </div>
+
+        <div id="auth-message" class="auth-message hidden"></div>
+
+        <div class="login-form">
+          <div class="input-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Jane Smith" required />
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min. 8 characters" required />
+          </div>
+
+          <div class="input-group">
+            <label for="confirm">Confirm Password</label>
+            <input type="password" id="confirm" placeholder="Repeat password" required />
+          </div>
+
+          <!-- Password strength bar -->
+          <div class="strength-bar-wrap">
+            <div id="strength-bar" class="strength-bar"></div>
+          </div>
+          <p id="strength-label" class="strength-label"></p>
+
+          <button id="register-btn" class="login-btn" onclick="handleRegister()">
+            <span id="btn-text">Create Account</span>
+            <span id="btn-spinner" class="spinner hidden"></span>
+          </button>
+
+          <div class="login-footer">
+            <a href="sign_in.html">Already have an account? Sign In →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:3000/api";
+
+      // ── Password strength ──────────────────────────────────────────────────
+      document.getElementById("password").addEventListener("input", function () {
+        const val = this.value;
+        const bar = document.getElementById("strength-bar");
+        const label = document.getElementById("strength-label");
+
+        let score = 0;
+        if (val.length >= 8) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+
+        const levels = ["", "weak", "fair", "good", "strong"];
+        const labels = ["", "Weak", "Fair", "Good", "Strong"];
+        bar.className = `strength-bar ${levels[score]}`;
+        label.textContent = score ? labels[score] : "";
+      });
+
+      // ── Helpers ────────────────────────────────────────────────────────────
+      function showMessage(text, type = "error") {
+        const el = document.getElementById("auth-message");
+        el.textContent = text;
+        el.className = `auth-message ${type}`;
+      }
+
+      function setLoading(loading) {
+        document.getElementById("btn-text").classList.toggle("hidden", loading);
+        document.getElementById("btn-spinner").classList.toggle("hidden", !loading);
+        document.getElementById("register-btn").disabled = loading;
+      }
+
+      // ── Register handler ───────────────────────────────────────────────────
+      async function handleRegister() {
+        const name     = document.getElementById("name").value.trim();
+        const email    = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirm  = document.getElementById("confirm").value;
+
+        if (!name || !email || !password || !confirm) {
+          showMessage("Please fill in all fields.");
+          return;
+        }
+        if (password.length < 8) {
+          showMessage("Password must be at least 8 characters.");
+          return;
+        }
+        if (password !== confirm) {
+          showMessage("Passwords do not match.");
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const res = await fetch(`${API_BASE}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            showMessage(data.error || "Registration failed.");
+            return;
+          }
+
+          showMessage("Account created! Redirecting to sign in…", "success");
+          setTimeout(() => {
+            window.location.href = "sign_in.html";
+          }, 1200);
+        } catch (err) {
+          showMessage("Could not reach server. Is it running?");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") handleRegister();
+      });
+    </script>
+  </body>
+</html>

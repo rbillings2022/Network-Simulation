@@ -1,0 +1,245 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+:root {
+  /* Varables for color pallet*/
+  --base-color: #22374e;
+  --line-color: #4c5b79;
+  --hover-color: #1a3d64;
+  --text-color: #f4f4f4;
+  --accent-color: #2a7ea1;
+  --secondary-text-color: #949baf;
+}
+
+/*Style Html Elements*/
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: Montserrat;
+  line-height: 24px;
+}
+body {
+  height: 100vh;
+  background-color: var(--base-color); /*Assigned Variable*/
+  color: var(--text-color); /*Assigned Variable*/
+  display: grid; /*Define grid layout of website.*/
+  grid-template-columns: auto 1fr; /* The side bar will scale automatically. The other column is 1fr*/
+  font-size: 20px;
+}
+
+/*Sidebar Style Content*/
+#sidebar {
+  /*Style all content in the sidebar.*/
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  width: 250px;
+  padding: 5px 16px; /*Top-bottom Left-Right*/
+  background-color: var(--base-color);
+  border: 2px solid var(--line-color); /*Only cause a border to the right of the column*/
+  border-radius: 10px;
+
+  /* Fix posotion of the side bar*/
+  position: sticky;
+  top: 0;
+  align-self: start;
+  transition: 300ms ease-in-out;
+  overflow: hidden; /*Hides content when closing the sidebar*/
+  text-wrap: nowrap;
+}
+#sidebar.close {
+  padding: 7px;
+  width: 60px;
+}
+#sidebar ul {
+  list-style: none;
+}
+#sidebar > ul:last-of-type {
+  /*Style for the Sign in*/
+  margin-top: auto;
+}
+#sidebar > ul.top-bar > li:first-child {
+  /*Flexbox for logo and open or close sidebar*/
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--line-color);
+  .logo {
+    /*Adjust logo font weight*/
+    font-weight: 600;
+  }
+  #adjust-size {
+    /*Adjust size of the logo icon*/
+    height: 30px;
+    width: 30px;
+  }
+}
+#sidebar ul li.active a {
+  /*Color displaying current active location in website.*/
+  color: var(--accent-color); /*Color Text*/
+  font-weight: 800;
+  svg {
+    /*Color the icon logo of the ACTIVE icon*/
+    fill: var(--accent-color);
+  }
+}
+#sidebar a,
+#sidebar .dropdown-btn,
+#sidebar .logo,
+#sidebar .add-dropdown {
+  /*Adjusting only the sidebar of texts(a), toggle, and dropdown*/
+  border-radius: 16px;
+  margin-top: 9px;
+  padding: 10px;
+  text-decoration: none;
+  color: var(--text-color);
+  display: flex;
+  align-content: center;
+  gap: 20px; /*Controls gap between icon and text*/
+}
+#sidebar svg {
+  /*Make changes to ALL svg icons*/
+  flex-shrink: 0; /*Prevent distortion in sizes*/
+  fill: var(--text-color);
+}
+#sidebar a span,
+#sidebar .dropdown-btn span {
+  /* Style spans for dropdown, and texts(a)*/
+  flex-grow: 1; /*Push the dropdown icon to the edge.*/
+}
+#sidebar a:hover,
+#sidebar .dropdown-btn:hover {
+  /*HOVER for text(a) and the dropdown*/
+  background-color: var(--hover-color);
+}
+#sidebar .sub-menu {
+  display: grid;
+  grid-template-rows: 0fr; /*Closes the down menu*/
+
+  > div {
+    /*Hide/Close child elements that dont fit in the container*/
+    overflow: hidden;
+  }
+}
+#sidebar .sub-menu.show {
+  /*Show class will be a parameters in JS*/
+  grid-template-rows: 1fr; /*Override hiding the menu by displaying it*/
+}
+#sidebar .sub-menu a {
+  /*Style submenu text.*/
+  padding-left: 30px;
+}
+.dropdown-btn svg {
+  /*Rotates the button animation*/
+  transition: 300ms ease-in-out;
+}
+.dropdown-btn {
+  /*Class will be used in Javascript*/
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+.rotate svg:last-child {
+  /*Class for Javascript to animate opening*/
+  rotate: 180deg;
+}
+#toggle-btn {
+  /*ID will be used in Javascript to toggle open and close.*/
+  margin-left: auto;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
+
+  svg {
+    /*Rotate the transition bar icon*/
+    transition: rotate 300ms ease-in-out;
+  }
+}
+.add-dropdown {
+  /*Add Dropdown menu button*/
+  width: 100%;
+  border: solid var(--accent-color);
+  background: var(--accent-color);
+
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+#plus-icon:hover {
+  /*Style plus-Icon when hovered.*/
+  rotate: 360deg;
+  transition: 500ms ease;
+}
+#toggle-btn:hover {
+  background-color: var(--hover-color);
+}
+main {
+  height: 100%;
+  min-height: 0;
+  padding: min(20px, 7%);
+  box-sizing: border-box;
+}
+main p {
+  color: var(--secondary-text-color);
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+/* Viewport side. Right MAINside of the screen*/
+#cytoscape {
+  width: 100%;
+  height: 100%;
+  background-color: #172738;
+  border-radius: 10px;
+}
+.container {
+  /*Style container for The RIGHT BOX.*/
+  border: 2px solid var(--line-color);
+  border-radius: 10px; /*Curve the edges of the border*/
+  padding: min(40px, 50px);
+  height: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  h2,
+  p {
+    margin-top: 10px;
+  }
+}
+/* Mini-Menu on button click*/
+#add-menu {
+    list-style: none;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    position: absolute;
+    padding: 6px;
+    background-color: var(--hover-color);
+    border: 1px solid var(--line-color);
+    border-radius: 10px;
+    z-index: 100;
+    min-width: 140px;
+}
+#add-menu.open {
+    display: flex;
+}
+#add-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-color);
+    text-decoration: none;
+    margin-top: 0;
+}
+#add-menu a:hover {
+    background-color: var(--accent-color);
+}
