@@ -1,9 +1,5 @@
-// ── User Profile ──────────────────────────────────────────────────────────────
+// User Profile
 
-/**
- * Populates the sidebar user profile card from sessionStorage.
- * Shows the user's first initial as an avatar and their registered name.
- */
 function loadUserProfile() {
     const user = getCurrentUser();
 
@@ -23,7 +19,7 @@ function loadUserProfile() {
     nameEl.textContent   = user.name;
 }
 
-// ── Logout ────────────────────────────────────────────────────────────────────
+// Logout
 
 function handleLogout() {
     sessionStorage.removeItem("tracer_user");
@@ -31,7 +27,7 @@ function handleLogout() {
     fetch(`${API_BASE}/logout`, { method: "POST" }).catch(() => {});
 }
 
-// ── Serialization ─────────────────────────────────────────────────────────────
+// Serialization 
 
 function serializeCanvas() {
     const elements = window.cy.elements().map(el => ({
@@ -53,7 +49,7 @@ function deserializeCanvas(state) {
         return;
     }
 
-    // 1. Clear existing state
+    // Clear existing state
     NetworkState.devices.length = 0;
     window.cy.elements().remove();
 
@@ -61,10 +57,10 @@ function deserializeCanvas(state) {
         rebuildSidebarDeviceList();
     }
 
-    // 2. Restore devices
+    // Restore devices
     state.devices.forEach(d => NetworkState.devices.push(d));
 
-    // 3. Restore cytoscape elements — nodes first, then edges
+    // Restore cytoscape elements 
     const nodes = state.elements.filter(e => e.group === "nodes");
     const edges = state.elements.filter(e => e.group === "edges");
 
@@ -79,14 +75,12 @@ function deserializeCanvas(state) {
             window.cy.add({ group: "edges", data: el.data });
         }
     });
-
-    // 4. Refresh labels and offline states
+    
     state.devices.forEach(d => {
         if (typeof refreshNodeLabel === "function")     refreshNodeLabel(d.id);
         if (typeof syncNodeOfflineState === "function") syncNodeOfflineState(d.id);
     });
 
-    // 5. Rebuild sidebar entries
     if (typeof addDeviceToSidebar === "function") {
         state.devices.forEach(d => addDeviceToSidebar(d));
     }
@@ -94,7 +88,7 @@ function deserializeCanvas(state) {
     window.cy.fit(undefined, 40);
 }
 
-// ── Save Modal ────────────────────────────────────────────────────────────────
+// Save Modal
 
 function openSaveModal() {
     document.getElementById("save-name-input").value = "";
@@ -156,7 +150,7 @@ async function handleSaveConfirm() {
     }
 }
 
-// ── Load Modal ────────────────────────────────────────────────────────────────
+// Load Modal
 
 async function openLoadModal() {
     document.getElementById("load-modal").classList.add("open");
@@ -230,7 +224,7 @@ async function handleLoadTopology(topoId, topoName) {
 
         deserializeCanvas(data.state);
 
-        // ── Confirmation message ──────────────────────────────────
+        // Confirmation message
         showToast(`'${topoName}' Network Loaded`);
 
     } catch {
@@ -238,8 +232,7 @@ async function handleLoadTopology(topoId, topoName) {
     }
 }
 
-// ── Wire everything up after DOM loads ───────────────────────────────────────
-
+// Wire everything up after DOM loads
 document.addEventListener("DOMContentLoaded", () => {
 
     // Populate user profile in sidebar
@@ -265,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === document.getElementById("load-modal")) closeLoadModal();
     });
 
-    // Logout — clear session before navigating
+    // Logout 
     const logoutLink = document.getElementById("logout-link");
     if (logoutLink) {
         logoutLink.addEventListener("click", handleLogout);
