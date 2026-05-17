@@ -29,7 +29,6 @@ document.addEventListener("click", () => {
     miniMenu.classList.remove("open");
 });
 
-// ── Add Device ────────────────────────────────────────────────
 function addDeviceToViewport(deviceType) {
     const type   = deviceType.toLowerCase();
     const counts = NetworkState.deviceCounts;
@@ -76,7 +75,7 @@ function refreshNodeLabel(deviceId) {
     node.data('status', device.status);
 }
 
-// ── Sidebar Entry ─────────────────────────────────────────────
+// Sidebar
 function createSidebarEntry(device) {
     const li = document.createElement("li");
     li.dataset.deviceId = device.id;
@@ -118,7 +117,7 @@ function refreshSidebarDot(deviceId) {
     if (dot) dot.className = `status-dot ${device.status === 'ONLINE' ? 'online' : 'offline'}`;
 }
 
-// ── Power Toggle ──────────────────────────────────────────────
+//TogglePower 
 function toggleDevicePower(deviceId) {
     const device = NetworkState.devices.find(d => d.id === deviceId);
     if (!device) return;
@@ -152,7 +151,7 @@ function toggleDevicePower(deviceId) {
     logEvent(`${device.name} is now ${device.status}.`);
 }
 
-// ── Delete Device ─────────────────────────────────────────────
+//Delete Device
 function deleteDevice(deviceId) {
     const device = NetworkState.devices.find(d => d.id === deviceId);
     if (!device) return;
