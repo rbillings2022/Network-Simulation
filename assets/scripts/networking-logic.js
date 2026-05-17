@@ -3,18 +3,11 @@
 //                 ARP, Packet builder, simulation engine
 // ============================================================
 
-
-// ── 1. Connection Validation ─────────────────────────────────
-
-/**
- * Determines whether two device ports can be connected.
- * Returns { valid: boolean, reason: string }
- */
+// Connection Validation
 function canConnect(deviceA, portAId, deviceB, portBId) {
     const portA = deviceA.ports.find(p => p.id === portAId);
     const portB = deviceB.ports.find(p => p.id === portBId);
 
-    // Port existence check
     if (!portA || !portB) {
         return { valid: false, reason: 'One or both ports do not exist.' };
     }
@@ -31,12 +24,12 @@ function canConnect(deviceA, portAId, deviceB, portBId) {
     const typeB = deviceB.type;
     const endDevices = ['PC', 'Laptop', 'Phone', 'Server'];
 
-    // PC ↔ PC or any end-device ↔ end-device (direct)
+    // PC <-> PC or any end-device <-> end-device 
     if (endDevices.includes(typeA) && endDevices.includes(typeB)) {
         return { valid: false, reason: 'Direct end-device connections are not supported.' };
     }
 
-    // Switch ↔ Switch
+    // Switch <-> Switch
     if (typeA === 'Switch' && typeB === 'Switch') {
         return { valid: false, reason: 'Switch uplinks are outside this simulation\'s scope.' };
     }
@@ -74,7 +67,7 @@ function canConnect(deviceA, portAId, deviceB, portBId) {
         }
     }
 
-    // Switch → Router: must use router's LAN port (FastEthernet0/0)
+    // Switch -> Router: must use router's LAN port (FastEthernet0/0)
     if (typeA === 'Switch' && typeB === 'Router') {
         if (portB.interfaceName !== 'FastEthernet0/0') {
             return { valid: false, reason: 'Switch must connect to Router\'s LAN port (FastEthernet0/0).' };
@@ -107,12 +100,7 @@ function _switchFull(switchDevice) {
 }
 
 
-// ── 2. IP Assignment ──────────────────────────────────────────
-
-/**
- * Traces from an end device through switches to find its router.
- * Returns the Router device object, or null if not reachable.
- */
+// IP Assignment
 function findConnectedRouter(device) {
     const visited = new Set();
 
@@ -140,11 +128,6 @@ function findConnectedRouter(device) {
     return trace(device);
 }
 
-/**
- * Assigns an IP to an end device via DHCP from its connected router.
- * Called after a connection is successfully made.
- * Skips devices with staticIp: true.
- */
 function assignIPviaDHCP(device) {
     if (device.staticIp) return;
 
@@ -170,10 +153,6 @@ function assignIPviaDHCP(device) {
     logEvent(`DHCP: ${device.name} assigned ${ip} via ${router.name}`);
 }
 
-/**
- * Releases a device's IP back to its router's lease pool.
- * Call this on device deletion or disconnection.
- */
 function releaseDeviceIP(device) {
     if (!device.ipAddress || device.staticIp) return;
 
@@ -192,9 +171,6 @@ function releaseDeviceIP(device) {
     logEvent(`IP released: ${device.name} is no longer addressed.`);
 }
 
-
-// ── 3. ARP Table Management ───────────────────────────────────
-
 function _addToARP(deviceId, ip, mac) {
     const existing = NetworkState.arpTable.find(e => e.deviceId === deviceId);
     if (existing) {
@@ -209,16 +185,10 @@ function _removeFromARP(deviceId) {
     NetworkState.arpTable = NetworkState.arpTable.filter(e => e.deviceId !== deviceId);
 }
 
-/**
- * Looks up a MAC for a given IP.
- * If not found, simulates an ARP broadcast and logs both request and reply.
- * Returns the MAC string, or null if the device doesn't exist.
- */
 function resolveARP(senderDevice, targetIp) {
     const cached = NetworkState.arpTable.find(e => e.ip === targetIp);
     if (cached) return cached.mac;
 
-    // Simulate ARP broadcast
     logEvent(`ARP Request: ${senderDevice.name} asks — who has ${targetIp}?`);
 
     const target = NetworkState.devices.find(d => d.ipAddress === targetIp);
@@ -233,24 +203,10 @@ function resolveARP(senderDevice, targetIp) {
     return target.macAddress;
 }
 
-
-// ── 4. Packet Builder ─────────────────────────────────────────
-
-/**
- * Creates a single Packet object for one hop in a simulation.
- * srcIP and dstIP never change. srcMAC and dstMAC change at every router.
- */
 function buildPacket(srcMAC, dstMAC, srcIP, dstIP, protocol, hopLabel, note) {
     return { srcMAC, dstMAC, srcIP, dstIP, protocol, hopLabel, note };
 }
 
-
-// ── 5. Simulation Engine ──────────────────────────────────────
-
-/**
- * DHCP gate check used by Scenarios 2–4.
- * Returns false and logs a message if DHCP has not completed.
- */
 function requireDHCP() {
     if (!NetworkState.dhcpCompleted) {
         logEvent('Run DHCP Discovery first to assign IP addresses.');
@@ -259,12 +215,6 @@ function requireDHCP() {
     return true;
 }
 
-/**
- * Scenario 1 — DHCP Discovery
- * Assigns IPs to all unaddressed end devices connected to a router subnet.
- * Sets dhcpCompleted: true when done.
- * Returns an ordered array of Packet objects for the UI to animate.
- */
 function runDHCPDiscovery() {
     const packets = [];
     const endDevices = ['PC', 'Laptop', 'Phone', 'Server'];
@@ -328,11 +278,6 @@ function runDHCPDiscovery() {
     return packets;
 }
 
-/**
- * Scenario 2 — PC to PC communication on the same subnet.
- * Produces ARP + data packets for same-LAN delivery.
- * Gate: requires dhcpCompleted.
- */
 function runSameLANComm(srcDevice, dstDevice) {
     if (!requireDHCP()) return [];
 
@@ -351,11 +296,6 @@ function runSameLANComm(srcDevice, dstDevice) {
     return packets;
 }
 
-/**
- * Scenario 3 — PC to PC across routers (inter-subnet routing).
- * Produces ARP + routed hops with MAC rewriting at each router.
- * Gate: requires dhcpCompleted.
- */
 function runInterSubnetComm(srcDevice, dstDevice) {
     if (!requireDHCP()) return [];
 
@@ -368,7 +308,6 @@ function runInterSubnetComm(srcDevice, dstDevice) {
         return [];
     }
 
-    // Hop 1: PC → its default gateway (srcRouter LAN port)
     const gatewayMac = resolveARP(srcDevice, srcRouter.ipAddress);
     packets.push(buildPacket(
         srcDevice.macAddress, gatewayMac,
@@ -378,7 +317,6 @@ function runInterSubnetComm(srcDevice, dstDevice) {
         `${srcDevice.name} sends to its gateway ${srcRouter.name}. Dst IP is outside the local subnet.`
     ));
 
-    // Hop 2: srcRouter → dstRouter (WAN link — MAC rewrite)
     const dstRouterWanMac = resolveARP(srcRouter, dstRouter.ports.find(p => p.interfaceName === 'FastEthernet0/1')?.ipAddress);
     packets.push(buildPacket(
         srcRouter.macAddress, dstRouterWanMac ?? dstRouter.macAddress,
@@ -388,7 +326,6 @@ function runInterSubnetComm(srcDevice, dstDevice) {
         `${srcRouter.name} rewrites Layer 2 headers and forwards packet across WAN link to ${dstRouter.name}.`
     ));
 
-    // Hop 3: dstRouter → destination PC (LAN delivery)
     const dstMac = resolveARP(dstRouter, dstDevice.ipAddress);
     packets.push(buildPacket(
         dstRouter.macAddress, dstMac,
@@ -402,10 +339,6 @@ function runInterSubnetComm(srcDevice, dstDevice) {
     return packets;
 }
 
-/**
- * Scenario 4 — DNS + HTTP request to a Web Server.
- * Gate: requires dhcpCompleted.
- */
 function runDNSandHTTP(clientDevice, dnsServer, webServer) {
     if (!requireDHCP()) return [];
 
