@@ -1,6 +1,6 @@
 const API_BASE = "http://localhost:3000/api";
 
-      // ── Password strength ──────────────────────────────────────────────────
+      // Password strength
       document.getElementById("password").addEventListener("input", function () {
         const val = this.value;
         const bar = document.getElementById("strength-bar");
@@ -32,7 +32,7 @@ const API_BASE = "http://localhost:3000/api";
         document.getElementById("register-btn").disabled = loading;
       }
 
-      // ── Register handler ───────────────────────────────────────────────────
+      // Register handler
       async function handleRegister() {
         const name     = document.getElementById("name").value.trim();
         const email    = document.getElementById("email").value.trim();
