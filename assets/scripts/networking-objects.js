@@ -2,7 +2,7 @@
 // network-state.js — Global state and all utility functions
 // ============================================================
 
-// ── 1. Global Network State ──────────────────────────────────
+// Global Network State
 const NetworkState = {
     devices:       [],
     connections:   [],
@@ -13,8 +13,7 @@ const NetworkState = {
     dhcpCompleted: false
 };
 
-// ── 2. Subnet Pool ───────────────────────────────────────────
-// Fixed pool — randomly assigned to routers, but never change once assigned
+// Subnet Pool
 const SUBNET_POOL = [
     { subnet: '192.168.1.0/24', lanIp: '192.168.1.1', mask: '255.255.255.0', range: '192.168.1' },
     { subnet: '192.168.2.0/24', lanIp: '192.168.2.1', mask: '255.255.255.0', range: '192.168.2' },
@@ -23,14 +22,10 @@ const SUBNET_POOL = [
 ];
 let subnetPoolIndex = 0; // tracks which subnets have been assigned
 
-// WAN IP counter — 203.0.113.1 through .4
+
 let wanCounter = 0;
 
-// ── 3. Utility — MAC Address Generator ───────────────────────
-/**
- * Generates a unique MAC address in XX:XX:XX:XX:XX:XX format.
- * Checks all existing devices to guarantee no collision.
- */
+// Utility — MAC Address Generator
 function generateMAC() {
     const usedMACs = new Set(NetworkState.devices.map(d => d.macAddress));
 
@@ -47,11 +42,7 @@ function generateMAC() {
     return mac;
 }
 
-// ── 4. Utility — Router Subnet Assignment ────────────────────
-/**
- * Assigns the next available subnet from the fixed pool to a router.
- * Returns the subnet config object, or null if all 4 are taken.
- */
+// Utility
 function generateRouterSubnet() {
     if (subnetPoolIndex >= SUBNET_POOL.length) {
         logEvent('Subnet pool exhausted — max 4 routers supported.');
@@ -60,21 +51,10 @@ function generateRouterSubnet() {
     return SUBNET_POOL[subnetPoolIndex++];
 }
 
-// ── 5. Utility — WAN IP Generator ────────────────────────────
-/**
- * Returns the next simulated public WAN IP (203.0.113.x).
- * Treated as a direct internet endpoint — no shared subnet.
- */
 function generateWanIp() {
     wanCounter++;
     return `203.0.113.${wanCounter}`;
 }
-
-// ── 6. Utility — DHCP Lease Management ───────────────────────
-/**
- * Initialises the lease pool for a router if it doesn't exist yet.
- * Called automatically when a router is created.
- */
 function initLeasePool(routerId) {
     const exists = NetworkState.ipLeases.find(l => l.routerId === routerId);
     if (!exists) {
@@ -82,11 +62,6 @@ function initLeasePool(routerId) {
     }
 }
 
-/**
- * Returns the next available host IP for a given router's subnet.
- * Starts at .2 (router itself holds .1) and increments to .254.
- * Returns null if the pool is exhausted.
- */
 function getNextDHCPLease(routerId) {
     const router = NetworkState.devices.find(d => d.id === routerId);
     if (!router) return null;
@@ -110,10 +85,6 @@ function getNextDHCPLease(routerId) {
     return null;
 }
 
-/**
- * Releases a leased IP back into the pool.
- * Called when a device is deleted or disconnected.
- */
 function releaseIPLease(routerId, ip) {
     const leasePool = NetworkState.ipLeases.find(l => l.routerId === routerId);
     if (!leasePool) return;
@@ -122,11 +93,7 @@ function releaseIPLease(routerId, ip) {
     logEvent(`DHCP: Released ${ip} back to router ${routerId}`);
 }
 
-// ── 7. Port Factory ───────────────────────────────────────────
-/**
- * Creates a Port object.
- * Routers get ipAddress + subnetMask; switches and end devices do not.
- */
+// Port
 function createPort(id, interfaceName, ipAddress = null, subnetMask = null) {
     return {
         id,
@@ -138,11 +105,7 @@ function createPort(id, interfaceName, ipAddress = null, subnetMask = null) {
     };
 }
 
-// ── 8. Device Factory ─────────────────────────────────────────
-/**
- * Builds the base Device object shared by all device types.
- * Device-specific ports and fields are added by the type factories below.
- */
+// Device
 function createBaseDevice(id, name, type) {
     return {
         id,
@@ -211,11 +174,7 @@ function createRouter(id, name) {
     return device;
 }
 
-// ── 9. Connection Factory ─────────────────────────────────────
-/**
- * Creates a Connection and atomically updates both ports.
- * Never call this without immediately updating both port states.
- */
+// Connection 
 function createConnection(sourceDevice, sourcePortId, targetDevice, targetPortId) {
     const connectionId = `conn-${sourceDevice.id}-${targetDevice.id}-${Date.now()}`;
 
@@ -244,7 +203,7 @@ function createConnection(sourceDevice, sourcePortId, targetDevice, targetPortId
     return connection;
 }
 
-// ── 10. Simulation Log ────────────────────────────────────────
+// Simulation Log
 function logEvent(message) {
     const timestamp = new Date().toLocaleTimeString();
     const entry = `[${timestamp}] ${message}`;
