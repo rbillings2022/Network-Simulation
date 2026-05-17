@@ -45,8 +45,7 @@ function toggleSubMenu(button) {
 
 const API_BASE = "http://localhost:3000/api";
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
+// Helpers
 function getCurrentUser() {
     try {
         return JSON.parse(sessionStorage.getItem("tracer_user"));
