@@ -7,7 +7,7 @@ function runPacketAnimation() {
 
     const nodes = window.cy.nodes();
 
-    // ── Guard: need more than one device ─────────────────────
+    //Guard: need more than one device
     if (NetworkState.devices.length <= 1) {
         showToast('You need more than one device in a network.', true);
         return;
@@ -19,7 +19,7 @@ function runPacketAnimation() {
         return;
     }
 
-    // ── Build animation path ──────────────────────────────────
+    // Build animation path
     // Find the first PC device as the starting point
     const startDevice = NetworkState.devices.find(d => d.type === 'PC')
                      ?? NetworkState.devices[0];
@@ -34,11 +34,11 @@ function runPacketAnimation() {
         return;
     }
 
-    // ── Create the animated dot ───────────────────────────────
+    // Create dot
     const dot = _createDot();
     document.getElementById('cytoscape').appendChild(dot);
 
-    // ── Animate forward then back ─────────────────────────────
+    // Animate forward then back
     animateAlongPath(path, dot, () => {
         // Reached the end — animate back
         animateAlongPath([...path].reverse(), dot, () => {
@@ -47,7 +47,7 @@ function runPacketAnimation() {
     });
 }
 
-// ── Build ordered node path from start ───────────────────────
+// Build ordered node path from start
 function buildPath(startNode) {
     const visited = new Set();
     const path    = [startNode];
@@ -68,7 +68,7 @@ function buildPath(startNode) {
     return path;
 }
 
-// ── Animate dot along an array of cy nodes ───────────────────
+// Animate dot along an array of cy nodes
 function animateAlongPath(nodePath, dot, onComplete) {
     let index = 0;
 
@@ -81,7 +81,6 @@ function animateAlongPath(nodePath, dot, onComplete) {
         const fromNode = nodePath[index];
         const toNode   = nodePath[index + 1];
 
-        // Pulse the edge between these two nodes
         const edgeId = fromNode.edgesWith(toNode).id();
         if (edgeId) pulseEdge(fromNode.id(), toNode.id(), 600);
 
@@ -123,7 +122,7 @@ function animateAlongPath(nodePath, dot, onComplete) {
     step();
 }
 
-// ── Get canvas pixel center of a cytoscape node ──────────────
+// Get canvas pixel center of a cytoscape node
 function _nodeCenter(node) {
     const container = document.getElementById('cytoscape');
     const rect      = container.getBoundingClientRect();
@@ -137,7 +136,7 @@ function _nodeCenter(node) {
     };
 }
 
-// ── Create the dot element ────────────────────────────────────
+// Create the dot element 
 function _createDot() {
     const dot = document.createElement('div');
     dot.id = 'packet-dot';
