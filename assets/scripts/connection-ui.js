@@ -2,11 +2,11 @@
 // connection-ui.js — Two-step port connection UI flow
 // ============================================================
 
-// ── State ─────────────────────────────────────────────────────
+// State
 NetworkState.connectionMode  = false;
 NetworkState.pendingSource   = null; // { device, portId }
 
-// ── Toast ─────────────────────────────────────────────────────
+// Toast
 function showToast(message, isError = true) {
     const existing = document.getElementById('conn-toast');
     if (existing) existing.remove();
@@ -36,7 +36,7 @@ function showToast(message, isError = true) {
     }, 3000);
 }
 
-// ── Reset connection mode ─────────────────────────────────────
+// Reset connection mode
 function resetConnectionMode() {
     NetworkState.connectionMode = false;
     NetworkState.pendingSource  = null;
@@ -47,7 +47,7 @@ function resetConnectionMode() {
     if (window.cy) window.cy.nodes().removeClass('connecting-source');
 }
 
-// ── Step 1 — User clicks "Connect" on a device card ──────────
+// User clicks "Connect" on a device card
 function startConnection(deviceId) {
     const device = NetworkState.devices.find(d => d.id === deviceId);
     if (!device) return;
@@ -63,11 +63,7 @@ function startConnection(deviceId) {
     showPortPicker(device, 'source');
 }
 
-// ── Port Picker UI ────────────────────────────────────────────
-/**
- * Renders a floating port-picker panel anchored inside the device panel area.
- * mode: 'source' | 'target'
- */
+// Port Picker UI
 function showPortPicker(device, mode) {
     document.querySelectorAll('.port-picker').forEach(el => el.remove());
 
@@ -145,7 +141,7 @@ function showPortPicker(device, mode) {
     document.body.appendChild(picker);
 }
 
-// ── Step 2 — Source port chosen ───────────────────────────────
+// Source port chosen
 function onSourcePortSelected(device, portId) {
     NetworkState.pendingSource = { device, portId };
     document.querySelectorAll('.port-picker').forEach(el => el.remove());
@@ -157,7 +153,7 @@ function onSourcePortSelected(device, portId) {
 
     showToast(`${device.name} → ${getPortName(device, portId)} selected. Now click a target device.`, false);
 
-    // Listen for next device click — both canvas and sidebar
+    // Listen for next device click
     enableTargetSelection();
 }
 
@@ -166,7 +162,7 @@ function getPortName(device, portId) {
     return port ? port.interfaceName : portId;
 }
 
-// ── Step 3 — Enable target selection ─────────────────────────
+// Enable target selection
 function enableTargetSelection() {
     // Canvas click
     if (window.cy) {
@@ -188,7 +184,7 @@ function enableTargetSelection() {
     }
 }
 
-// ── Step 4 — Target device clicked ───────────────────────────
+// Target device clicked
 function onTargetDeviceSelected(targetDevice) {
     if (targetDevice.status === 'OFFLINE') {
         showToast(`${targetDevice.name} is offline — cannot connect.`);
@@ -217,7 +213,7 @@ function onTargetDeviceSelected(targetDevice) {
         return;
     }
 
-    // Show target port picker — only show valid candidate ports
+    // Show target port picker
     showFilteredPortPicker(targetDevice, candidatePorts);
 }
 
@@ -281,7 +277,7 @@ function showFilteredPortPicker(device, ports) {
     document.body.appendChild(picker);
 }
 
-// ── Step 5 — Target port chosen — finalise ────────────────────
+// Target port chosen
 function onTargetPortSelected(targetDevice, targetPortId) {
     const { device: sourceDevice, portId: sourcePortId } = NetworkState.pendingSource;
 
@@ -338,14 +334,8 @@ function onTargetPortSelected(targetDevice, targetPortId) {
 
     resetConnectionMode();
 }
-// ── Sidebar "Connect Device" flow ─────────────────────────────
 
-/**
- * Valid target types per source device type.
- * PC/Server → Switch only
- * Switch    → Router only
- * Router    → Router only (WAN)
- */
+// Sidebar "Connect Device" flow
 const VALID_TARGETS = {
     'PC':     ['Switch'],
     'Server': ['Switch'],
@@ -391,7 +381,7 @@ function openConnectMenu(sourceDeviceId) {
     _showTargetDevicePicker(sourceDevice, targets);
 }
 
-// Step 1 — Pick target device
+// Pick target device
 function _showTargetDevicePicker(sourceDevice, targets) {
     document.querySelectorAll('.port-picker').forEach(el => el.remove());
 
@@ -409,13 +399,13 @@ function _showTargetDevicePicker(sourceDevice, targets) {
     document.body.appendChild(picker);
 }
 
-// Step 2 — Pick source port
+// Pick source port
 function _showSourcePortPicker(sourceDevice, targetDevice) {
     document.querySelectorAll('.port-picker').forEach(el => el.remove());
 
     const emptyPorts = sourceDevice.ports.filter(p => p.status === 'EMPTY');
     
-    // Temporary debug — remove once working
+    // Temporary debug
     console.log('Source ports:', sourceDevice.ports);
     console.log('Empty ports:', emptyPorts);
 
@@ -450,13 +440,8 @@ function _showSourcePortPicker(sourceDevice, targetDevice) {
     document.body.appendChild(picker);
 }
 
-// Step 3 — Pick target port
-// ── Sidebar target-port-only picker ───────────────────────────
-/**
- * Called from sidebar Connect Device flow.
- * Skips source port picker — PC only has one port (FastEthernet0/0).
- * Goes straight to showing available ports on the target device.
- */
+// Pick target port
+// Sidebar target-port-only picker
 function showTargetPortsOnly(sourceDevice, targetDevice) {
     // Auto-select first empty source port
     const sourcePort = sourceDevice.ports.find(p => p.status === 'EMPTY');
@@ -467,8 +452,6 @@ function showTargetPortsOnly(sourceDevice, targetDevice) {
 
     const candidatePorts = targetDevice.ports.filter(p => {
         if (p.status !== 'EMPTY') return false;
-
-        // FastEthernet0/0 on a Switch is reserved for Routers only
         if (targetDevice.type === 'Switch' && 
             p.interfaceName === 'FastEthernet0/0' && 
             sourceDevice.type !== 'Router') return false;
@@ -540,7 +523,7 @@ function showTargetPortsOnly(sourceDevice, targetDevice) {
     subMenuDiv.appendChild(cancelLi);
 }
 
-// Step 4 — Finalise and draw edge
+// Finalise and draw edge
 function _finaliseConnection(sourceDevice, sourcePortId, targetDevice, targetPortId) {
     const result = canConnect(sourceDevice, sourcePortId, targetDevice, targetPortId);
     if (!result.valid) {
@@ -595,7 +578,6 @@ function _forceNodeRedraw(deviceId) {
     if (!window.cy) return;
     const node = window.cy.$(`#${deviceId}`);
     if (node.empty()) return;
-    // Two-tick nudge — first update fires the listener, second ensures re-render
     node.data('updated', Date.now());
     setTimeout(() => node.data('updated', Date.now() + 1), 50);
 }
