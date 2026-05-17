@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
         boxSelectionEnabled:   false,
 
         style: [
-            // ── Base node ─────────────────────────────────────
-            {
+            // Base node
                 selector: 'node',
                 style: {
                     'shape':'round-rectangle',
@@ -23,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             },
 
-            // ── Device type border colors ─────────────────────
+            // Device type border colors
             {
                 selector: 'node[type="pc"]',
                 style: {
@@ -81,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             },
 
-            // ── OFFLINE state ─────────────────────────────────
+            // OFFLINE state
             {
                 selector: 'node.offline',
                 style: {
@@ -91,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             },
 
-            // ── Connection mode: source highlight ─────────────
+            // Connection mode: source highlight
             {
                 selector: 'node.connecting-source',
                 style: {
@@ -105,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             },
 
-            // ── Selected node ─────────────────────────────────
+            // Selected node
             {
                 selector: 'node:selected',
                 style: {
@@ -119,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             },
 
-            // ── Edges ─────────────────────────────────────────
+            // Edges
             {
                 selector: 'edge',
                 style: {
@@ -139,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     'opacity':            1
                 }
             },
-            // Edge label shows on hover (class toggled via JS)
+            // Edge label shows on hover
             {
                 selector: 'edge.hovered',
                 style: {
@@ -148,12 +147,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     'width':        3
                 }
             },
-            // OFFLINE edge — hidden
             {
                 selector: 'edge.offline',
                 style: { 'display': 'none' }
             },
-            // Packet animation — active edge pulses
+            // Packet animation 
             {
                 selector: 'edge.packet-active',
                 style: {
@@ -165,13 +163,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         ],
 
-        // Preset layout — nodes stay where user drags them
+        // Preset layout 
         layout: { name: 'preset' }
     });
 
     window.cy = cy;
     
-    // ── HTML Labels ───────────────────────────────────────────
+    // HTML Labels
     cy.nodeHtmlLabel([
         {
             query: 'node',
@@ -217,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>`;
                 };
 
-                // ── PC / Laptop / Phone ───────────────────────────────────
+                // PC / Laptop / Phone
                 if (['PC', 'Laptop', 'Phone'].includes(device.type)) {
                     const ip      = device.ipAddress      ?? 'UNASSIGNED';
                     const mask    = device.subnetMask     ?? 'N/A';
@@ -244,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>`;
                 }
 
-                // ── Switch ────────────────────────────────────────────────
+                // Switch
                 if (device.type === 'Switch') {
                     const connectedCount = device.ports.filter(p => p.status === 'CONNECTED').length;
                     return `
@@ -268,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>`;
                 }
 
-                // ── Router ────────────────────────────────────────────────
+                // Router
                 if (device.type === 'Router') {
                     const lanPort = device.ports.find(p => p.interfaceName === 'FastEthernet0/0');
                     const wanPort = device.ports.find(p => p.interfaceName === 'FastEthernet0/1');
@@ -313,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>`;
                 }
 
-                // ── Server ────────────────────────────────────────────────
+                // Server
                 if (device.type === 'Server') {
                     const ip      = device.ipAddress      ?? 'UNASSIGNED';
                     const mask    = device.subnetMask     ?? 'N/A';
@@ -352,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     ]);
 
-    // ── Edge hover label ──────────────────────────────────────
+    // Edge hover label
     cy.on('mouseover', 'edge', function (evt) {
         evt.target.addClass('hovered');
     });
@@ -360,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
         evt.target.removeClass('hovered');
     });
 
-    // ── Node tap → open device panel ─────────────────────────
+    // Node tap → open device panel
     cy.on('tap', 'node', function (evt) {
         const nodeId = evt.target.data('id');
         const device = NetworkState.devices.find(d => d.id === nodeId);
@@ -369,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // ── Canvas tap → close panel ──────────────────────────────
+    // Canvas tap → close panel
     cy.on('tap', function (evt) {
         if (evt.target === cy && typeof closeDevicePanel === 'function') {
             closeDevicePanel();
@@ -378,8 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// ── Helpers called by add-device.js / connection-ui.js ───────
-
+// Helpers called by add-device.js / connection-ui.js
 /** Places a new node at a random non-overlapping position */
 function getRandomPosition() {
     const container = document.getElementById('cytoscape');
