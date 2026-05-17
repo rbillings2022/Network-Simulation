@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — Tracer</title>
+    
+    <link rel="icon" href="../../../assets/icons/lightning.png" type="image/x-icon" />
+
+    <!--Style Link-->
+    <link href="../../styles/sign_in.css" rel="stylesheet" />
+
+    <!--Scripts-->
+    <script src="sign_in.js" defer></script>
+  </head>
+  <style>
+    
+  </style>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <img src="../../../assets/icons/lightning.png" alt="Logo" class="login-logo" />
+          <h1 style="margin-bottom: 10px;">Tracer</h1>
+          <p>Enter your credentials to access the Dashboard</p>
+        </div>
+
+        <!-- Error / success banner -->
+        <div id="auth-message" class="auth-message hidden"></div>
+
+        <div class="login-form">
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" required />
+          </div>
+
+          <button id="login-btn" class="login-btn" onclick="handleLogin()">
+            <span id="btn-text">Sign In</span>
+            <span id="btn-spinner" class="spinner hidden"></span>
+          </button>
+
+          <!--Connect To other pages-->
+          <div class="login-footer">
+            <a href="../register/register.html">Don't have an account? Register →</a>
+          </div>
+          <div class="login-footer" style="margin-top:10px;">
+            <a href="../../../index.html">← Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

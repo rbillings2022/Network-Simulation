@@ -1,0 +1,27 @@
+Dependencies:
+    -   When package.json is read it will read the name and version
+        Then find the compatible dependency version.
+    -   When installing evberything from the package. package-lock makes sure versions
+        are consistant.
+
+Express: web framework. allows my server to listen ot request
+    Like POST and repsonses POST/api/login
+
+pg: stand for "node-postgres". Connects Javascript code to PostgreSQL.
+    pool.query() commands in server.js script, pg communicates with the database.
+
+bcrypt: password hashing. where passwords stored in a database are 
+    encrypted into something random. When a user log in bcrypt compares
+    creditenals sent by the user with the stored credidentials in the database.
+
+dotenv: read .env and makes its values available in code while keeping passwords secret.
+
+cors: stands for Cross-Origin Recourse Sharing. Browsers will block request between different origins.
+    This package allows requests through the browser.
+
+Browser (fetch API)
+    → cors allows the request through
+    → express receives it and routes it
+    → bcrypt hashes/checks the password
+    → pg saves/reads from PostgreSQL
+    → dotenv kept your DB password safe

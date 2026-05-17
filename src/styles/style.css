@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 :root {
-  /* Varables for color pallet*/
+  /* Variables for color palette */
   --base-color: #22374e;
   --line-color: #4c5b79;
   --hover-color: #1a3d64;
@@ -9,7 +10,7 @@
   --secondary-text-color: #949baf;
 }
 
-/*Style Html Elements*/
+/* ── Reset ──── */
 * {
   margin: 0;
   padding: 0;
@@ -20,32 +21,31 @@ html {
 }
 body {
   height: 100vh;
-  background-color: var(--base-color); /*Assigned Variable*/
-  color: var(--text-color); /*Assigned Variable*/
-  display: grid; /*Define grid layout of website.*/
-  grid-template-columns: auto 1fr; /* The side bar will scale automatically. The other column is 1fr*/
+  background-color: var(--base-color);
+  color: var(--text-color);
+  display: grid;
+  grid-template-columns: auto 1fr; /* Sidebar auto, main 1fr */
   font-size: 20px;
 }
 
-/*Sidebar Style Content*/
+/* ── Sidebar ── */
 #sidebar {
-  /*Style all content in the sidebar.*/
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   height: 100%;
   width: 250px;
-  padding: 5px 16px; /*Top-bottom Left-Right*/
+  padding: 5px 16px;
   background-color: var(--base-color);
-  border: 2px solid var(--line-color); /*Only cause a border to the right of the column*/
+  border: 2px solid var(--line-color);
   border-radius: 10px;
 
-  /* Fix posotion of the side bar*/
+  /* Sticky position */
   position: sticky;
   top: 0;
   align-self: start;
   transition: 300ms ease-in-out;
-  overflow: hidden; /*Hides content when closing the sidebar*/
+  overflow: hidden; /* Hides content when closing sidebar */
   text-wrap: nowrap;
 }
 #sidebar.close {
@@ -55,101 +55,108 @@ body {
 #sidebar ul {
   list-style: none;
 }
+
+/* Sign in / Log out at bottom */
 #sidebar > ul:last-of-type {
-  /*Style for the Sign in*/
   margin-top: auto;
 }
+
+/* Logo row */
 #sidebar > ul.top-bar > li:first-child {
-  /*Flexbox for logo and open or close sidebar*/
   display: flex;
   justify-content: flex-end;
   padding: 10px 0px;
   margin-bottom: 16px;
   border-bottom: 2px solid var(--line-color);
+
   .logo {
-    /*Adjust logo font weight*/
     font-weight: 600;
   }
   #adjust-size {
-    /*Adjust size of the logo icon*/
     height: 30px;
     width: 30px;
   }
 }
+
+/* Active nav item */
 #sidebar ul li.active a {
-  /*Color displaying current active location in website.*/
-  color: var(--accent-color); /*Color Text*/
+  color: var(--accent-color);
   font-weight: 800;
   svg {
-    /*Color the icon logo of the ACTIVE icon*/
     fill: var(--accent-color);
   }
 }
+
+/* All sidebar links, buttons, and dropdowns */
 #sidebar a,
 #sidebar .dropdown-btn,
 #sidebar .logo,
 #sidebar .add-dropdown {
-  /*Adjusting only the sidebar of texts(a), toggle, and dropdown*/
   border-radius: 16px;
   margin-top: 9px;
   padding: 10px;
   text-decoration: none;
   color: var(--text-color);
   display: flex;
-  align-content: center;
-  gap: 20px; /*Controls gap between icon and text*/
+  align-items: center; /* ← fixes the dot stretching */
+  gap: 20px;
 }
+
+/* All sidebar SVG icons */
 #sidebar svg {
-  /*Make changes to ALL svg icons*/
-  flex-shrink: 0; /*Prevent distortion in sizes*/
+  flex-shrink: 0;
   fill: var(--text-color);
 }
+
+/* Span inside sidebar links — pushes arrow to edge */
 #sidebar a span,
 #sidebar .dropdown-btn span {
-  /* Style spans for dropdown, and texts(a)*/
-  flex-grow: 1; /*Push the dropdown icon to the edge.*/
+  flex-grow: 1;
 }
+
+/* Hover state for links and dropdowns */
 #sidebar a:hover,
 #sidebar .dropdown-btn:hover {
-  /*HOVER for text(a) and the dropdown*/
   background-color: var(--hover-color);
 }
+
+/* Sub-menu — hidden by default using grid trick */
 #sidebar .sub-menu {
   display: grid;
-  grid-template-rows: 0fr; /*Closes the down menu*/
+  grid-template-rows: 0fr;
 
   > div {
-    /*Hide/Close child elements that dont fit in the container*/
     overflow: hidden;
   }
 }
 #sidebar .sub-menu.show {
-  /*Show class will be a parameters in JS*/
-  grid-template-rows: 1fr; /*Override hiding the menu by displaying it*/
+  grid-template-rows: 1fr;
 }
 #sidebar .sub-menu a {
-  /*Style submenu text.*/
-  padding-left: 30px;
+  padding-left: 50px;
+  padding-bottom: 0px;
+  font-size: 15px;
 }
+
+/* Dropdown arrow animation */
 .dropdown-btn svg {
-  /*Rotates the button animation*/
   transition: 300ms ease-in-out;
 }
 .dropdown-btn {
-  /*Class will be used in Javascript*/
   width: 100%;
   text-align: left;
   background: none;
   border: none;
   font: inherit;
   cursor: pointer;
+  align-items: center;  /* ← add this */
 }
 .rotate svg:last-child {
-  /*Class for Javascript to animate opening*/
   rotate: 180deg;
 }
+
+/* Toggle sidebar button */
 #toggle-btn {
-  /*ID will be used in Javascript to toggle open and close.*/
   margin-left: auto;
   padding: 10px;
   border: none;
@@ -158,28 +165,77 @@ body {
   cursor: pointer;
 
   svg {
-    /*Rotate the transition bar icon*/
     transition: rotate 300ms ease-in-out;
   }
-}
-.add-dropdown {
-  /*Add Dropdown menu button*/
-  width: 100%;
-  border: solid var(--accent-color);
-  background: var(--accent-color);
-
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-}
-#plus-icon:hover {
-  /*Style plus-Icon when hovered.*/
-  rotate: 360deg;
-  transition: 500ms ease;
 }
 #toggle-btn:hover {
   background-color: var(--hover-color);
 }
+
+/* ── Bottom Bar — Mini Menu + Log out ────────────────────────── */
+
+/* Allow the menu to escape sidebar's overflow: hidden */
+#sidebar .bottom-bar {
+  overflow: visible;
+}
+#sidebar .bottom-bar > li {
+  position: relative;
+  overflow: visible;
+}
+
+/* Add device (+) button */
+.add-dropdown {
+  width: 100%;
+  border: solid var(--accent-color);
+  background: var(--accent-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#plus-icon:hover {
+  rotate: 360deg;
+  transition: 500ms ease;
+}
+
+
+/* Choose Device Mini Menu  */
+#add-menu {
+  list-style: none;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  position: fixed;   /* fixed to viewport, not sidebar */
+  padding: 6px;
+  background-color: var(--hover-color);
+  border: 1px solid var(--line-color);
+  border-radius: 10px;
+  z-index: 9999;
+  min-width: 140px;
+}
+#add-menu.open {
+  display: flex;
+}
+#add-menu li {
+  list-style: none;
+}
+
+/* Override the global #sidebar a styles inside the mini menu */
+#add-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;       /* Override sidebar's 16px */
+  font-size: 14px;
+  color: var(--text-color);
+  text-decoration: none;
+  margin-top: 0;            /* Override sidebar's margin-top: 9px */
+}
+#add-menu a:hover {
+  background-color: var(--accent-color);
+}
+
+/* ── Main Canvas Area ────────────────────────────────────────── */
 main {
   height: 100%;
   min-height: 0;
@@ -192,54 +248,284 @@ main p {
   margin-bottom: 15px;
 }
 
-/* Viewport side. Right MAINside of the screen*/
-#cytoscape {
-  width: 100%;
-  height: 100%;
-  background-color: #172738;
-  border-radius: 10px;
-}
+/* Canvas container */
 .container {
-  /*Style container for The RIGHT BOX.*/
+  position: relative; /* Required for toolbar + device panel positioning */
   border: 2px solid var(--line-color);
-  border-radius: 10px; /*Curve the edges of the border*/
+  border-radius: 10px;
   padding: min(40px, 50px);
   height: 100%;
   box-sizing: border-box;
   cursor: pointer;
+
   h2,
   p {
     margin-top: 10px;
   }
 }
-/* Mini-Menu on button click*/
-#add-menu {
+
+/* Cytoscape viewport */
+#cytoscape {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #172738;
+  border-radius: 10px;
+}
+
+/* ── Canvas Toolbar — Save / Load ────────────────────────────── */
+.canvas-toolbar {
+  position: absolute;
+  top: 2px;
+  right: 40px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 16px;
+  background-color: var(--accent-color);
+  border: solid var(--accent-color);
+  border-radius: 10px;
+  color: var(--text-color);
+  font-family: Montserrat;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 200ms ease;
+}
+.toolbar-btn:hover {
+  background-color: var(--hover-color);
+  border-color: var(--accent-color);
+}
+
+/* ── Status Dot ──────────────────────────────────────────────── */
+
+/* ── Load Modal ──────────────────────────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open {
+  display: flex;
+}
+.modal-card {
+  background: var(--base-color);
+  border: 1px solid var(--line-color);
+  border-radius: 16px;
+  padding: 28px;
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.modal-card h2 {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: var(--text-color);
+}
+.topology-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0.5px solid var(--line-color);
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-color);
+  transition: background 150ms;
+}
+.topology-item:hover { background: var(--hover-color); }
+.topology-item span  { color: var(--secondary-text-color); font-size: 12px; }
+.modal-close {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid var(--line-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  cursor: pointer;
+  font-family: Montserrat;
+}
+.modal-close:hover { background: var(--hover-color); }
+/* Highlights the source node during connection mode */
+.cy-node-connecting-source {
+    border-color: #2a7ea1 !important;
+    border-width: 4px !important;
+}
+
+/* Connect device nested submenu */
+.connect-submenu {
     list-style: none;
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    position: absolute;
-    padding: 6px;
-    background-color: var(--hover-color);
-    border: 1px solid var(--line-color);
-    border-radius: 10px;
-    z-index: 100;
-    min-width: 140px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 250ms ease-in-out;
 }
-#add-menu.open {
-    display: flex;
+.connect-submenu.open {
+    max-height: 300px;
 }
-#add-menu a {
+.connect-expand-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
+    justify-content: space-between;
+    padding: 6px 10px;
     border-radius: 8px;
-    font-size: 14px;
     color: var(--text-color);
-    text-decoration: none;
+}
+.connect-expand-btn:hover {
+    background-color: var(--hover-color);
+}
+
+/* Divider between each device entry in the sidebar */
+#sidebar ul.top-bar > li[data-device-id] {
+    border-bottom: 2px solid var(--line-color);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+
+/* ── Add these to the bottom of your style.css ── */
+
+/* Save modal card — no max-height cap */
+.save-modal-card {
+    max-height: unset;
+}
+
+/* Label above inputs */
+.modal-field label {
+    display: block;
+    font-size: 13px;
+    color: var(--secondary-text-color);
+    margin-bottom: 8px;
+}
+
+/* Text inputs inside modals */
+.modal-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--hover-color);
+    border: 1px solid var(--line-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+}
+.modal-input:focus {
+    border-color: var(--accent-color);
+}
+
+/* Row of action buttons at the bottom of a modal */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+}
+.modal-actions .toolbar-btn,
+.modal-actions .modal-close {
+    width: 120px;
     margin-top: 0;
 }
-#add-menu a:hover {
+
+/* Error text inside modals */
+.modal-error {
+    color: #e05c5c;
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 16px;
+    text-align: center;
+}
+
+/* Muted hint text inside modals */
+.modal-hint {
+    color: var(--secondary-text-color);
+    font-size: 13px;
+}
+
+/* Topology item name */
+.topology-item-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Modal field spacing */
+.modal-field {
+    margin-bottom: 16px;
+}
+
+/* User Profile Card */
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    background-color: var(--hover-color);
+    border: 1px solid var(--line-color);
+}
+
+/* Circle avatar showing the user's first initial */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
     background-color: var(--accent-color);
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Registered name */
+.user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* "Logged in" subtitle */
+.user-label {
+    font-size: 11px;
+    color: var(--secondary-text-color);
+}
+
+/* Hide text content when sidebar is collapsed */
+#sidebar.close .user-info {
+    display: none;
+}
+#sidebar.close .user-profile {
+    justify-content: center;
+    padding: 8px;
 }

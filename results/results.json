@@ -1,0 +1,211 @@
+{
+  "config": {
+    "configFile": "H:\\All Programming Projects\\Packet Tracer Branches\\Branch 1\\Packet Tracer-Branch_1\\test\\playwright.config.js",
+    "rootDir": "H:/All Programming Projects/Packet Tracer Branches/Branch 1/Packet Tracer-Branch_1/test",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "H:/All Programming Projects/Packet Tracer Branches/Branch 1/Packet Tracer-Branch_1/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "H:/All Programming Projects/Packet Tracer Branches/Branch 1/Packet Tracer-Branch_1/test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 600000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "../results/html-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../results/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 6,
+    "webServer": {
+      "command": "node ../server/server.js",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 15000
+    }
+  },
+  "suites": [
+    {
+      "title": "add-devices.test.js",
+      "file": "add-devices.test.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Adding a PC device creates a node in canvas and displays its network info",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 934,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-14T16:45:56.176Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "H:\\All Programming Projects\\Packet Tracer Branches\\Branch 1\\Packet Tracer-Branch_1\\test-results\\artifacts\\add-devices-Adding-a-PC-de-292ac-d-displays-its-network-info\\test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "31cebd8d7d7225496c27-0e66adb5d12c53b7b1a6",
+          "file": "add-devices.test.js",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "Adding PC, Router, Switch, Server creates four nodes and displays their network info",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1100,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-14T16:45:57.313Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "H:\\All Programming Projects\\Packet Tracer Branches\\Branch 1\\Packet Tracer-Branch_1\\test-results\\artifacts\\add-devices-Adding-PC-Rout-9a38d-displays-their-network-info\\test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "31cebd8d7d7225496c27-0fc90ef01935722d036c",
+          "file": "add-devices.test.js",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "Adding PC×2, Router×2, Switch, Server creates six nodes and displays their network info",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1281,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-14T16:45:58.428Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "H:\\All Programming Projects\\Packet Tracer Branches\\Branch 1\\Packet Tracer-Branch_1\\test-results\\artifacts\\add-devices-Adding-PC×2-Ro-50344-displays-their-network-info\\test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "31cebd8d7d7225496c27-1b47ff07c7353ffc8a99",
+          "file": "add-devices.test.js",
+          "line": 49,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-04-14T16:45:55.239Z",
+    "duration": 4754.2390000000005,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

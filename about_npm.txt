@@ -8,3 +8,6 @@ Utilising npm install:
         depending on folder functionality. 
         This project uses package.json in 'server'
         and 'root' folder.
+
+Package-lock.json:
+    -   This is a snipet of depencency tree downloaded.

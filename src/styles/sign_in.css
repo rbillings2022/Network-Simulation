@@ -8,7 +8,13 @@
   --error-color: #e05c5c;
   --success-color: #4caf82;
 }
-
+body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
 /* ── Layout ──────────────────────────────────────────────────────────────── */
 .login-container {
   display: flex;
@@ -129,7 +135,7 @@
   min-height: 16px;
 }
 
-/* ── Button ──────────────────────────────────────────────────────────────── */
+/* Login Button  */
 .login-btn {
   width: 100%;
   padding: 12px;
